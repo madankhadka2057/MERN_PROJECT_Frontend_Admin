@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { deleteUser } from "store/userSlice";
 import { fetchUser } from "store/userSlice";
 
 const Users = () => {
@@ -25,6 +26,10 @@ const Users = () => {
           .toLocaleDateString()
           .includes(new Date(selectDate).toLocaleDateString())
     );
+
+    const handleDelete=(id)=>{
+      dispatch(deleteUser(id))
+    }
   return (
     <div className="container mx-auto px-4 sm:px-8">
       <div className="py-8">
@@ -102,6 +107,9 @@ const Users = () => {
                   <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     RegisturedAt
                   </th>
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -142,6 +150,14 @@ const Users = () => {
                               {new Date(user?.createdAt).toLocaleDateString()}
                             </span>
                           </span>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <button
+                          onClick={()=>{handleDelete(user?._id)}}
+                          type="button"
+                          class="inline-block rounded-full bg-danger px-6 pb-2 pt-2.5 text-xs bg-red-600 font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
+                          Delete
+                        </button>
                         </td>
                       </tr>
                     </>

@@ -15,11 +15,19 @@ const userSlice=createSlice({
         },
         setStatus(state,action){
             state.status=action.payload
+        },
+        deleteUserFromState(state,action){
+            const index=state.user.findIndex(user=>user._id===action.payload.id)
+            if (index !== -1) {
+                // Remove the element at the found index using splice
+                state.user.splice(index, 1);
+            }
+            return state;
         }
     }
 })
 
-export const {setUser,setStatus}=userSlice.actions
+export const {setUser,setStatus,deleteUserFromState}=userSlice.actions
 export default userSlice.reducer
 
 export function fetchUser(){
@@ -35,3 +43,21 @@ export function fetchUser(){
         }
     }
 }
+export function deleteUser(id){
+    return async function deleteUserThunk(dispatch){
+      dispatch(setStatus(STATUSES.LOADING))
+      try{
+        const response=await AuthenticatedApi.delete(`/admin/users/${id}`)
+  
+        dispatch(setStatus(STATUSES.SUCCESS))
+        console.log(response.status)
+        if(response.status===200){
+
+            //slice the user form store
+          dispatch(deleteUserFromState({id}))
+        }
+      }catch(err){
+        console.log("Error is :",err)
+      }
+    }
+  }

@@ -1,4 +1,4 @@
-import { AuthenticatedApi } from "http/Hello";
+
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -16,10 +16,17 @@ const Orders = () => {
   const [selectItem,setSelectItem]=useState("all")
   const [selectDate,setSelectDate]=useState('')
   const [search,setSearch]=useState('')
-const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus.toLowerCase()===selectItem))
-      .filter((order)=>(selectDate===""||new Date(order.createdAt).toLocaleDateString()===new Date(selectDate).toLocaleDateString()))
-      .filter((order)=>(search===""||order?.items[0]?.product?.productName.toLowerCase().includes(search)))
-  // console.log(filterOrders)
+  console.log(search)
+  const filterOrders=data?.filter((order) => {
+          const productName = order?.items[0]?.product?.productName.toLowerCase();
+          const searchTerm = search.toLowerCase();
+          console.log(productName, searchTerm);
+          return search === "" || productName.includes(searchTerm)||order.user.userName.toLowerCase().includes(search);
+      })
+      .filter((order)=>( selectItem==="all"||order.orderStatus.toLowerCase()===selectItem))
+      // .filter((order)=>(search === "" ||order.user.userName.toLowerCase().includes(search)))
+      // .filter((order)=>(selectDate===""||new Date(order.createdAt).toLocaleDateString()===new Date(selectDate).toLocaleDateString()))
+      // console.log(filterOrders)
   // delete particular order by id
    const handleDelete=(id)=>{
     dispatch(deleteOrder(id))
@@ -53,7 +60,7 @@ const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus
               </svg>
             </span>
             <input
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>(setSearch(e.target.value))}
               placeholder="Search"
               className="block w-full rounded-full border border-gray-400 bg-white py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
             />
@@ -68,7 +75,7 @@ const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus
               </svg>
             </span>
             <input
-              onChange={(e) => setSelectDate(e.target.value)}
+              onChange={(e) =>setSelectDate(e.target.value)}
               type="date"
               placeholder="Search"
               className="block w-full rounded-full border border-gray-400 bg-white py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
@@ -88,6 +95,9 @@ const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus
                     Order Id
                   </th>
                   <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                    User Name
+                  </th>
+                  <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                     Price[Quentity]
                   </th>
                   <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
@@ -100,7 +110,7 @@ const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus
                     Order Status
                   </th>
                   <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                    Order At
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -136,10 +146,16 @@ const filterOrders=data?.filter((order)=>( selectItem==="all"||order.orderStatus
                         </td>
                         <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                           <p className="whitespace-no-wrap text-gray-900">
+                            {data?.user?.userName}
+                          </p>
+                        </td>
+                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                          <p className="whitespace-no-wrap text-gray-900">
                             {data?.items[0]?.product?.productPrice &&
                               `${data?.items[0]?.product?.productPrice}[${data?.items[0]?.quantity}]`}
                           </p>
                         </td>
+                       
                         <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                           <p className="whitespace-no-wrap text-gray-900">
                             {data?.totalAmount}
