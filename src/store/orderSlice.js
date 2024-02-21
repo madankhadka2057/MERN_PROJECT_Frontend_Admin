@@ -4,6 +4,7 @@
 import { AuthenticatedApi } from "http/Hello";
 import { createSlice } from "@reduxjs/toolkit";
 import { STATUSES } from "globals/misc/Statuses";
+import { useNavigate } from "react-router-dom";
 const orderSlice=createSlice({
     name:"order",
     initialState:{
@@ -21,9 +22,15 @@ const orderSlice=createSlice({
             const index=state.data.findIndex(data=>data._id===action.payload.id)
             state.data.splice(index,1)
         },
+        updateOrders(state,action){
+            const index=state.data.findIndex(data=>data._id===action.payload.id)
+            if(index!==-1){
+                state.data[index]=action.payload.data
+            }
+        },
     }
 });
-const {setOrders,setStatus,deleteOrders}=orderSlice.actions
+const {setOrders,setStatus,deleteOrders,updateOrders}=orderSlice.actions
 export default orderSlice.reducer
 
 export function fetchOrder(){
@@ -51,6 +58,25 @@ export function deleteOrder(id){
         dispatch(deleteOrders({id}))
         dispatch(setStatus(STATUSES.SUCCESS))
         // window.location.href='/admin/orders'
+    }
+    }catch(error){
+    console.log(error)
+    dispatch(setStatus(STATUSES.ERROR))
+    alert("Some thing error",error)
+    }
+}
+}
+export function changeOrderStatus(id,orderStatus){
+    return async function changeOrderStatusThunk(dispatch){
+        dispatch(setStatus(STATUSES.LOADING))
+    try{
+        
+    const response= await AuthenticatedApi.patch(`admin/orders/${id}`,{orderStatus})
+    // console.log(response.status)
+    console.log(response.data.data)
+    if(response.status===200){
+        dispatch(setStatus(STATUSES.SUCCESS))
+        dispatch(updateOrders({id,data:response.data.data}))
     }
     }catch(error){
     console.log(error)

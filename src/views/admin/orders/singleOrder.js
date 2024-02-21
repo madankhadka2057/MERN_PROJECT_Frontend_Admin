@@ -1,30 +1,34 @@
-import { AuthenticatedApi } from "http/Hello";
+
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { changeOrderStatus } from "store/orderSlice";
 import { deleteOrder } from "store/orderSlice";
 
 const SingleOrder = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  console.log(id);
   const { data } = useSelector((state) => state.order);
-  const navigate = useNavigate();
-  // console.log(data.data)
+  const [newStatus,setOrderStatus]=useState('')
   const [filteredOrder] = data?.filter((order) => order._id === id);
-  // console.log(filteredOrder)
+  useEffect(()=>{
+    setOrderStatus(filteredOrder?.orderStatus)
+  },[])
 
-  const cancelOrder = async () => {
-    try {
-      const response = await AuthenticatedApi.patch("orders/cancel", { id });
-      // console.log(response.status)
-      // console.log(response.data)
-      if (response.status === 200) {
-        navigate("/myorder");
-      }
-    } catch (error) {
-      alert("Some thing error", error);
-    }
-  };
+  const orderStatuses = [
+    "Pending",
+    "Delivered",
+    "Cancelled",
+    "Ontheway",
+    "Preparation",
+  ];
+  
+  // };
+  const handleOrderStatus=(e)=>{
+      const orderStatus=e.target.value
+      setOrderStatus(orderStatus)
+      dispatch(changeOrderStatus(id,orderStatus))
+  }
 
   const handleDelete = async () => {
     dispatch(deleteOrder(id));
@@ -77,7 +81,6 @@ const SingleOrder = () => {
                             Rs. {orderItems?.product?.productPrice}{" "}
                             <span className="text-red-300 line-through">
                               {" "}
-                              {}
                             </span>
                           </p>
                           <p className="text-base leading-6 text-gray-800 dark:text-white xl:text-lg">
@@ -191,23 +194,23 @@ const SingleOrder = () => {
                 className="justify-left flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"
                 style={{ justifyContent: "flex-start" }}
               >
-                <div className="max-w-sm" style={{ width:"100%"}}>
+                <div className="max-w-sm" style={{ width: "100%" }}>
                   <label
                     htmlFor="countries"
                     className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                   >
-                    Select an option
+                    Change Order Status
                   </label>
-                  <select
+                  <select onChange={(e)=>handleOrderStatus(e)}
                     id="countries"
                     className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                    value={newStatus}
                   >
-                    <option selected>Choose Order Status</option>
-                    <option value="US">Pending</option>
-                    <option value="CA">Delivered</option>
-                    <option value="FR">Cancelled</option>
-                    <option value="DE">Ontheway</option>
-                    <option value="DE">Preparation</option>
+                    {orderStatuses.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -222,8 +225,7 @@ const SingleOrder = () => {
                     border: "none solid blue",
                     borderRadius: "6px",
                     width: "100%",
-                    outline: "none" 
-                    
+                    outline: "none",
                   }}
                 >
                   Delete
