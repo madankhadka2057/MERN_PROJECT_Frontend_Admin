@@ -17,6 +17,9 @@ const Orders = () => {
   const [selectDate,setSelectDate]=useState('')
   const [search,setSearch]=useState('')
   console.log(search)
+
+
+  //search according to selectItems and input!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const filterOrders=data?.filter((order) => {
           const productName = order?.items[0]?.product?.productName.toLowerCase();
           const searchTerm = search.toLowerCase();
@@ -27,11 +30,13 @@ const Orders = () => {
       // .filter((order)=>(search === "" ||order.user.userName.toLowerCase().includes(search)))
       // .filter((order)=>(selectDate===""||new Date(order.createdAt).toLocaleDateString()===new Date(selectDate).toLocaleDateString()))
       // console.log(filterOrders)
-  // delete particular order by id
+
+  // delete particular order by id!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    const handleDelete=(id)=>{
     dispatch(deleteOrder(id))
    }
-    
+
+   
   return (
     <div className="container mx-auto mt-0 items-center px-4 sm:px-8">
       <div className="py-8">
@@ -183,7 +188,7 @@ const Orders = () => {
                             </span>
                           </span>
                         </td>
-                        <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td className="border-b border-gray-200 bg-white px-1 py-5 text-sm">
                         <button
                           onClick={()=>{handleDelete(data?._id)}}
                           type="button"

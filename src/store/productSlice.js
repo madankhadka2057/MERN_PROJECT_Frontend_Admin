@@ -13,11 +13,15 @@ const productSlice = createSlice({
     },
     setStatus(state, action) {
       state.status = action.payload;
+    },
+    spliceFromStore(state,action){
+      const index=state.data.findIndex(data=>data._id===action.payload.id)
+      state.data.splice(index,1)
     }
   },
 });
 
-export const { setProduct, setStatus } = productSlice.actions;
+export const { setProduct, setStatus,spliceFromStore } = productSlice.actions;
 export default productSlice.reducer;
 
 export function loginProduct(data) {
@@ -47,6 +51,20 @@ export function fetchProduct(){
       dispatch(setStatus(STATUSES.SUCCESS))
       console.log(response.data)
     }catch(err){
+      console.log("Error is :",err)
+    }
+  }
+}
+export function deleteProduct(id){
+  return async function deleteProductThunk(dispatch){
+    dispatch(setStatus(STATUSES.LOADING))
+    try{
+      const response=await AuthenticatedApi.delete(`/products/${id}`)
+      dispatch(spliceFromStore({id}))
+      dispatch(setStatus(STATUSES.SUCCESS))
+      console.log(response.data)
+    }catch(err){
+      dispatch(setStatus(STATUSES.ERROR))
       console.log("Error is :",err)
     }
   }

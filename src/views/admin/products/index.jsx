@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { deleteProduct } from 'store/productSlice'
 import { fetchProduct } from 'store/productSlice'
 
 const Products = () => {
@@ -7,17 +8,24 @@ const Products = () => {
   useEffect(()=>{
     dispatch(fetchProduct())
   },[])
-  const {data:product}=useSelector((state)=>state.product)
-  console.log(product)
-
+  const {data:product}=useSelector((state)=>state.product)//fetch data form product Store
+  // console.log(product)
   const [selectItem,setSelectItem]=useState("all")
   const [selectDate,setSelectDate]=useState('')
   const [search,setSearch]=useState('')
+
+  //search produt through input and data!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const filterProduct=product?.filter((Product)=>(selectDate===""||new Date(Product.createdAt).toLocaleDateString()===new Date(selectDate).toLocaleDateString()))
       .filter((product)=>(search===""||product._id.toLocaleLowerCase().includes(search.toLocaleLowerCase())||product.productName.toLowerCase().includes(search.toLocaleLowerCase())))
       // .filter((Product)=>(Product.productName.toLowerCase().includes(search.toLocaleLowerCase())))
 
-    return (
+  //delete product By ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    const handleDelete=(id)=>{
+      dispatch(deleteProduct(id))
+    }
+  
+  
+  return (
       <div className="container mx-auto mt-0 items-center px-4 sm:px-8">
         <div className="py-8">
           <div>
@@ -92,6 +100,9 @@ const Products = () => {
                     <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                      Created Date
                     </th>
+                      <th className="border-b-2 border-gray-200 bg-gray-100 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -161,7 +172,14 @@ const Products = () => {
                               </span>
                             </span>
                           </td>
-                          
+                          <td className="border-b ml-0 border-gray-200 bg-white px-1 py-5 text-sm">
+                        <button
+                          onClick={()=>{handleDelete(product?._id)}}
+                          type="button"
+                          class="inline-block rounded-full bg-danger px-6 pb-2 pt-2.5 text-xs bg-red-600 font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
+                          Delete
+                        </button>
+                        </td>
                         </tr>
                       </>
                     );
