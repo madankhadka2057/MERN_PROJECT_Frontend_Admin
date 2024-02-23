@@ -13,6 +13,7 @@ import Orders from "views/admin/orders";
 import Users from "views/admin/users";
 import Products from "views/admin/products";
 import SingleOrder from "views/admin/orders/singleOrder";
+import SingleProduct from "views/admin/products/singleProduct";
 // import singleOrder from "./views/admin/orders/singleOrder"
 
 const routes = [
@@ -32,6 +33,14 @@ const routes = [
     secondary: true,
   },
   {
+    name: "SingleOrders",
+    layout: "/admin",
+    path: "orders/:id",
+    icon: <MdPerson className="h-6 w-6" />,
+    component: <SingleOrder/>,
+    secondary:true,
+  },
+  {
     name: "Users",
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
@@ -46,11 +55,11 @@ const routes = [
     component: <Products />,
   },
   {
-    name: "Orders",
+    name: "SingleProduct",
     layout: "/admin",
-    path: "orders/:id",
-    icon: <MdPerson className="h-6 w-6" />,
-    component: <SingleOrder/>,
+    path: "/products/:id",
+    // icon: <MdPerson className="h-6 w-6" />,
+    component: <SingleProduct/>,
     secondary:true,
   },
   

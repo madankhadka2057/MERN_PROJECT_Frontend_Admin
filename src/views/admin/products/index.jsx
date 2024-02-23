@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { deleteProduct } from 'store/productSlice'
 import { fetchProduct } from 'store/productSlice'
 
 const Products = () => {
+  const navigate=useNavigate()
   const dispatch=useDispatch()
   useEffect(()=>{
     dispatch(fetchProduct())
@@ -120,23 +122,25 @@ const Products = () => {
                                 />
                               </div>
                               <div className="ml-3">
-                                <p className="whitespace-no-wrap text-gray-900">
-                                {product?._id}
+                              {/* <Link to={`/admin/products/${product?._id}`}> */}
+                                <p onClick={()=>navigate(`/admin/products/${product?._id}`)} className="whitespace-no-wrap text-gray-900"style={{ textDecoration: "underline" }}>
+                                  {product?._id}
                                 </p>
+                              {/* </Link>   */}
                               </div>
                             </div>
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                             <p
                               className="whitespace-no-wrap text-blue-600"
-                              style={{ textDecoration: "underline" }}
+                              
                             >
                               {product?.productName}
                             </p>
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                             <p className="whitespace-no-wrap text-gray-900">
-                              {product?.productPrice}
+                             hell {product?.productPrice}
                             </p>
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

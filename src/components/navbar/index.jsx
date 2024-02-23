@@ -150,7 +150,7 @@ const Navbar = (props) => {
                 href="https://horizon-ui.com/?ref=live-free-tailwind-react"
                 className="hover:bg-black px-full linear flex cursor-pointer items-center justify-center rounded-xl py-[11px] font-bold text-navy-700 transition duration-200 hover:text-navy-700 dark:text-white dark:hover:text-white"
               >
-                Try Horizon Free
+                Kailash Free
               </a>
             </div>
           }
