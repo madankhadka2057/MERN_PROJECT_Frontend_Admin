@@ -140,7 +140,7 @@ const Products = () => {
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">
                             <p className="whitespace-no-wrap text-gray-900">
-                             hell {product?.productPrice}
+                             {product?.productPrice}
                             </p>
                           </td>
                           <td className="border-b border-gray-200 bg-white px-5 py-5 text-sm">

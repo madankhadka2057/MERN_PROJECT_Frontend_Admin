@@ -23,11 +23,14 @@ const productSlice = createSlice({
       if(index!==-1){
         state.data=action.payload.newData
       }
+    },
+    pushNewData(state,action){
+      state.data.push(action.payload)
     }
   },
 });
 
-export const { setProduct, setStatus,spliceFromStore,updateNewData} = productSlice.actions;
+export const { setProduct, setStatus,spliceFromStore,updateNewData,pushNewData} = productSlice.actions;
 export default productSlice.reducer;
 
 // export function loginProduct(data) {
@@ -55,7 +58,7 @@ export function fetchProduct(){
       const response=await AuthenticatedApi.get("/products/")
       dispatch(setProduct(response.data.data))
       dispatch(setStatus(STATUSES.SUCCESS))
-      console.log(response.data)
+      // console.log(response.data)
     }catch(err){
       console.log("Error is :",err)
     }
@@ -84,10 +87,47 @@ export function changeProductStatus(id,productStatus){
       const newData=[response.data.newData]
 
       dispatch(updateNewData({id,newData}))
-      console.log(newData)
+      // console.log(newData)
     }catch(err){
       dispatch(setStatus(STATUSES.ERROR))
       console.log("Error is :",err)
+    }
+  }
+}
+export function changeProductQtyAndPrice(id,data){
+  return async function changeProductQtyAndPriceThunk(dispatch){
+    dispatch(setStatus(STATUSES.LOADING))
+    try{
+      // console.log(id,data)
+      const productStockQty=data.productQty
+      const productPrice=data.productPrice
+      const response=await AuthenticatedApi.patch(`/products/updateqtyandprice/${id}`,{productStockQty,productPrice})
+      dispatch(setStatus(STATUSES.SUCCESS))
+      const newData=[response.data.data]
+
+      dispatch(updateNewData({id,newData}))
+      // console.log(newData)
+    }catch(err){
+      dispatch(setStatus(STATUSES.ERROR))
+      console.log("Error is :",err)
+    }
+  }
+}
+export function AddProducts(Data){
+  return async function AddProductThunk(dispatch){
+    dispatch(setStatus(STATUSES.LOADING))
+    try{
+      const response=await AuthenticatedApi.post("/products/",Data,{
+        headers:{
+          "Content-Type":"multipart/form-data"
+        }
+      })
+      dispatch(setStatus(STATUSES.SUCCESS))
+      dispatch(pushNewData(response.data.data))
+      // console.log(response.data.data)
+    }catch(err){
+      console.log("Error is :",err)
+      dispatch(setStatus(STATUSES.ERROR))
     }
   }
 }

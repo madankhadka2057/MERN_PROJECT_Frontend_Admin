@@ -14,6 +14,7 @@ import Users from "views/admin/users";
 import Products from "views/admin/products";
 import SingleOrder from "views/admin/orders/singleOrder";
 import SingleProduct from "views/admin/products/singleProduct";
+import AddProduct from "views/admin/products/AddProduct";
 // import singleOrder from "./views/admin/orders/singleOrder"
 
 const routes = [
@@ -53,6 +54,13 @@ const routes = [
     path: "products",
     icon: <MdPerson className="h-6 w-6" />,
     component: <Products />,
+  },
+  {
+    name: "Add Product",
+    layout: "/admin",
+    path: "Addproduct",
+    icon: <MdPerson className="h-6 w-6" />,
+    component: <AddProduct />,
   },
   {
     name: "SingleProduct",

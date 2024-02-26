@@ -1,18 +1,33 @@
-
+import { AuthenticatedApi } from "http/Hello";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { changePaymentStatus } from "store/orderSlice";
+import { fetchOrder } from "store/orderSlice";
 import { changeOrderStatus } from "store/orderSlice";
 import { deleteOrder } from "store/orderSlice";
 
 const SingleOrder = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.order);
-  const [filteredOrder] = data?.filter((order) => order._id === id);
-  const [newStatus,setOrderStatus]=useState(filteredOrder?.orderStatus)
-  const [newPaymentStatus,setpaymentStatus]=useState(filteredOrder?.paymentDetails?.status)
+  useEffect(() => {
+    console.log("Fetching orders...");
+    dispatch(fetchOrder())
+  }, []);
+  const  {data}  = useSelector((state) => state.order);
+  console.log(data)
+
+  const [filteredOrder] =data?.filter((order) => {
+        return order._id === id;
+      });
+
+  const [newStatus, setOrderStatus] = useState(filteredOrder?.orderStatus);
+  // console.log(filteredOrder?.orderStatus)
+  // console.log( filteredOrder?.paymentDetails?.status)
+  const [newPaymentStatus, setpaymentStatus] = useState(
+    filteredOrder?.paymentDetails?.status
+  );
+
   //i create a array of ordertatuses for chenge order status
   const orderStatuses = [
     "Pending",
@@ -21,25 +36,19 @@ const SingleOrder = () => {
     "Ontheway",
     "Preparation",
   ];
-  const paymentStatuses = [
-    "Success",
-    "Paid",
-    "Failed",
-    "Pending",
-  ];
-  
+  const paymentStatuses = ["Success", "Paid", "Failed", "Pending"];
 
-  const handleOrderStatus=(e)=>{
-      const orderStatus=e.target.value
-      setOrderStatus(orderStatus)
-      dispatch(changeOrderStatus(id,orderStatus))
-  }
-  const handlePaymentStatus=(e)=>{
-      const paymentStatus=e.target.value
-      setpaymentStatus(paymentStatus)
-      dispatch(changePaymentStatus(id,paymentStatus))
-      // dispatch(changeOrderStatus(id,orderStatus))
-  }
+  const handleOrderStatus = (e) => {
+    const orderStatus = e.target.value;
+    setOrderStatus(orderStatus);
+    dispatch(changeOrderStatus(id, orderStatus));
+  };
+  const handlePaymentStatus = (e) => {
+    const paymentStatus = e.target.value;
+    setpaymentStatus(paymentStatus);
+    dispatch(changePaymentStatus(id, paymentStatus));
+    // dispatch(changeOrderStatus(id,orderStatus))
+  };
   // console.log(newPaymentStatus)
   const handleDelete = async () => {
     dispatch(deleteOrder(id));
@@ -90,9 +99,7 @@ const SingleOrder = () => {
                         <div className="flex w-full items-start justify-between space-x-8">
                           <p className="text-base leading-6 dark:text-white xl:text-lg">
                             Rs. {orderItems?.product?.productPrice}{" "}
-                            <span className="text-red-300 line-through">
-                              {" "}
-                            </span>
+                            <span className="text-red-300 line-through"> </span>
                           </p>
                           <p className="text-base leading-6 text-gray-800 dark:text-white xl:text-lg">
                             Qty:{orderItems?.quantity}
@@ -190,12 +197,24 @@ const SingleOrder = () => {
           </h3>
           <div className="flex w-full flex-col justify-center md:flex-row md:items-start md:space-x-6 lg:space-x-8 xl:space-x-0">
             <div className="mt-6 flex w-full flex-col md:w-1/2 xl:w-full">
-              <div className=" m-auto justify-start max-w-sm flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"style={{width:"100%"}}>
-                <div className=" flex  flex-col items-center justify-center space-y-4 md:items-start"style={{width: "100%" }}>
-                  <p className="  text-sm leading-5 text-gray-600 dark:text-gray-300 md:text-left"style={{width:"100%"}}>
+              <div
+                className=" m-auto flex max-w-sm flex-col items-center justify-start space-y-4 md:flex-row md:space-y-0 md:space-x-4"
+                style={{ width: "100%" }}
+              >
+                <div
+                  className=" flex  flex-col items-center justify-center space-y-4 md:items-start"
+                  style={{ width: "100%" }}
+                >
+                  <p
+                    className="  text-sm leading-5 text-gray-600 dark:text-gray-300 md:text-left"
+                    style={{ width: "100%" }}
+                  >
                     Address: {filteredOrder?.shoppingAddress}
                   </p>
-                  <p className="text-left text-sm leading-5 text-gray-600 dark:text-gray-300 md:text-left" style={{width:"100%"}}>
+                  <p
+                    className="text-left text-sm leading-5 text-gray-600 dark:text-gray-300 md:text-left"
+                    style={{ width: "100%" }}
+                  >
                     Phone: {filteredOrder?.phoneNumber}
                   </p>
                 </div>
@@ -203,7 +222,11 @@ const SingleOrder = () => {
 
               <div
                 className=" justify-left flex flex-col items-center space-y-4 md:flex-row md:space-y-0 md:space-x-4"
-                style={{ justifyContent: "flex-start",display:"flex",flexDirection:"column"}}
+                style={{
+                  justifyContent: "flex-start",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
                 <div className=" max-w-sm" style={{ width: "100%" }}>
                   <label
@@ -212,7 +235,8 @@ const SingleOrder = () => {
                   >
                     Change Order Status
                   </label>
-                  <select onChange={(e)=>handleOrderStatus(e)}
+                  <select
+                    onChange={(e) => handleOrderStatus(e)}
                     id="countries"
                     className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     value={newStatus}
@@ -224,14 +248,18 @@ const SingleOrder = () => {
                     ))}
                   </select>
                 </div>
-                <div className="max-w-sm justify-left" style={{marginLeft:'0px', width: "100%" }}>
+                <div
+                  className="justify-left max-w-sm"
+                  style={{ marginLeft: "0px", width: "100%" }}
+                >
                   <label
                     htmlFor="countries"
                     className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Change Payment Status
                   </label>
-                  <select onChange={(e)=>handlePaymentStatus(e)}
+                  <select
+                    onChange={(e) => handlePaymentStatus(e)}
                     id="countries"
                     className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     value={newPaymentStatus}
@@ -245,10 +273,10 @@ const SingleOrder = () => {
                 </div>
               </div>
 
-              <div className="justify-center flex items-center">
+              <div className="flex items-center justify-center">
                 <button
                   onClick={handleDelete}
-                  className=" max-w-sm focus:shadow-outline rounded-md bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-600 focus:outline-none"
+                  className=" focus:shadow-outline max-w-sm rounded-md bg-red-500 py-2 px-4 font-bold text-white hover:bg-red-600 focus:outline-none"
                   style={{
                     backgroundColor: "red",
                     marginTop: "10px",

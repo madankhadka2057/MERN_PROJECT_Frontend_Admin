@@ -57,8 +57,8 @@ export function deleteOrder(id){
         dispatch(setStatus(STATUSES.LOADING))
     try{
     const response= await AuthenticatedApi.delete(`admin/orders/${id}`)
-    console.log(response.status)
-    console.log(response.data.message)
+    // console.log(response.status)
+    // console.log(response.data.message)
     if(response.status===200){
         dispatch(deleteOrders({id}))
         dispatch(setStatus(STATUSES.SUCCESS))
