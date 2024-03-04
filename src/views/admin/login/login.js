@@ -1,12 +1,14 @@
 
 import { useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { loginUser } from "store/authSlice"
 export const AdminLogin = () =>{
+    const navigate=useNavigate()
     const dispatch=useDispatch()
     const {register,handleSubmit,formState}=useForm()
     const handleLogin=(data)=>{
-        console.log(data)
+        // console.log(data)
         dispatch(loginUser(data))
     }
     

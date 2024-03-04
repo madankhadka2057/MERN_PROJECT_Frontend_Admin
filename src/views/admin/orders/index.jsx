@@ -1,29 +1,30 @@
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteOrder } from "store/orderSlice";
+import { deleteOrder} from "store/orderSlice";
 import { fetchOrder } from "store/orderSlice";
+import { STATUSES } from 'globals/misc/Statuses';
 
 const Orders = () => {
   const navigate=useNavigate()
   const dispatch = useDispatch();
+  const notify = () => toast("Delete Successfully!");
+  const notify2 = () => toast("No order found!");
   useEffect(() => {
     dispatch(fetchOrder());
   }, []);
-  const { data } = useSelector((state) => state.order);
-
+  let { data,deleteStatus,status} = useSelector((state) => state.order);
+  // const deleteStatu=deleteStatus
   const [selectItem,setSelectItem]=useState("all")
   const [selectDate,setSelectDate]=useState('')
   const [search,setSearch]=useState('')
-  console.log(search)
-
-
   //search according to selectItems and input!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const filterOrders=data?.filter((order) => {
           const productName = order?.items[0]?.product?.productName.toLowerCase();
           const searchTerm = search.toLowerCase();
-          console.log(productName, searchTerm);
+          // console.log(productName, searchTerm);
           return search === "" || productName.includes(searchTerm)||order.user.userName.toLowerCase().includes(search);
       })
       .filter((order)=>( selectItem==="all"||order.orderStatus.toLowerCase()===selectItem))
@@ -35,7 +36,32 @@ const Orders = () => {
    const handleDelete=(id)=>{
     dispatch(deleteOrder(id))
    }
+   const setToggle = () => {
+    // Check if toast object is defined
+    if (toast) {
+        toast.toggle = true;
+    } else {
+        console.error('Toast object is not defined');
+    }
+};
 
+// Call setToggle function
+setToggle();
+   useEffect(()=>{
+    if (deleteStatus===STATUSES.SUCCESS){
+      notify()
+      deleteStatus=null
+      console.log(deleteStatus)
+
+      // dispatch(setDeleteStatus(null))
+    }
+   },[deleteStatus])
+   useEffect(()=>{
+    if(status===STATUSES.ERROR){
+      notify2()
+      console.log(status)
+    }
+   },[status])
    
   return (
     <div className="container mx-auto mt-0 items-center px-4 sm:px-8">
@@ -189,12 +215,12 @@ const Orders = () => {
                           </span>
                         </td>
                         <td className="border-b border-gray-200 bg-white px-1 py-5 text-sm">
-                        <button
-                          onClick={()=>{handleDelete(data?._id)}}
-                          type="button"
-                          class="inline-block rounded-full bg-danger px-6 pb-2 pt-2.5 text-xs bg-red-600 font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
-                          Delete
-                        </button>
+                          <button
+                            onClick={()=>{handleDelete(data?._id)}}
+                            type="button"
+                            class="inline-block rounded-full bg-danger px-6 pb-2 pt-2.5 text-xs bg-red-600 font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(220,76,100,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.2),0_4px_18px_0_rgba(220,76,100,0.1)]">
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     </>
@@ -218,6 +244,22 @@ const Orders = () => {
           </div>
         </div>
       </div>
+      {/* {deleteStatus===STATUSES.SUCCESS&& */}
+        <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        Bounce
+        />
+      {/* } */}
+      
     </div>
   );
 };

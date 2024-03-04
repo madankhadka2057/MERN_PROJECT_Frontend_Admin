@@ -1,4 +1,5 @@
-import { AuthenticatedApi } from "http/Hello";
+
+import { socket } from "App";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -7,15 +8,15 @@ import { fetchOrder } from "store/orderSlice";
 import { changeOrderStatus } from "store/orderSlice";
 import { deleteOrder } from "store/orderSlice";
 
+
 const SingleOrder = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("Fetching orders...");
     dispatch(fetchOrder())
   }, []);
   const  {data}  = useSelector((state) => state.order);
-  console.log(data)
+  // console.log(data)
 
   const [filteredOrder] =data?.filter((order) => {
         return order._id === id;
@@ -37,13 +38,22 @@ const SingleOrder = () => {
     "Preparation",
   ];
   const paymentStatuses = ["Success", "Paid", "Failed", "Pending"];
-
   const handleOrderStatus = (e) => {
+    socket.emit("changeOrderStatus",{
+      status:e.target.value,
+      orderId:id,
+      userId:filteredOrder.user._id,
+    })
     const orderStatus = e.target.value;
     setOrderStatus(orderStatus);
     dispatch(changeOrderStatus(id, orderStatus));
   };
   const handlePaymentStatus = (e) => {
+    socket.emit("changePaymentStatus",{
+      status:e.target.value,
+      orderId:id,
+      userId:filteredOrder.user._id,
+    })
     const paymentStatus = e.target.value;
     setpaymentStatus(paymentStatus);
     dispatch(changePaymentStatus(id, paymentStatus));
