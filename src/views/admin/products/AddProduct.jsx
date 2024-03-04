@@ -10,7 +10,6 @@ const AddProduct = () => {
     const {status}=useSelector((state)=>state.product)
     const {register,handleSubmit,formState}=useForm()
     const [personImage, setPersonImage] = useState(null);
-    console.log(personImage)
     const handleSubmitData=async(data)=>{
         
         data={...data,productImage:data.productImage[0]}

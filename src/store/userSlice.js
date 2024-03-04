@@ -50,9 +50,8 @@ export function deleteUser(id){
         const response=await AuthenticatedApi.delete(`/admin/users/${id}`)
   
         dispatch(setStatus(STATUSES.SUCCESS))
-        console.log(response.status)
+        // console.log(response.status)
         if(response.status===200){
-
             //slice the user form store
           dispatch(deleteUserFromState({id}))
         }

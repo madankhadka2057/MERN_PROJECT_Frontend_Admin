@@ -5,7 +5,9 @@ const productSlice = createSlice({
   name: "product",
   initialState: {
     data: [],
-    status: STATUSES.SUCCESS,
+    status: "",
+    message:"",
+    checkStatus:""
   },
   reducers: {
     setProduct(state, action) {
@@ -13,6 +15,12 @@ const productSlice = createSlice({
     },
     setStatus(state, action) {
       state.status = action.payload;
+    },
+    setMessage(state,action){
+      state.message=action.payload
+    },
+    setCheckStatus(state,action){
+      state.checkStatus=action.payload
     },
     spliceFromStore(state,action){
       const index=state.data.findIndex(data=>data._id===action.payload.id)
@@ -30,7 +38,7 @@ const productSlice = createSlice({
   },
 });
 
-export const { setProduct, setStatus,spliceFromStore,updateNewData,pushNewData} = productSlice.actions;
+export const { setProduct, setStatus,spliceFromStore,updateNewData,pushNewData,setMessage,setCheckStatus} = productSlice.actions;
 export default productSlice.reducer;
 
 // export function loginProduct(data) {
@@ -57,7 +65,7 @@ export function fetchProduct(){
     try{
       const response=await AuthenticatedApi.get("/products/")
       dispatch(setProduct(response.data.data))
-      dispatch(setStatus(STATUSES.SUCCESS))
+      dispatch(setStatus(STATUSES.PRODUCT_SUCCESS))
       // console.log(response.data)
     }catch(err){
       console.log("Error is :",err)
@@ -71,7 +79,9 @@ export function deleteProduct(id){
       const response=await AuthenticatedApi.delete(`/products/${id}`)
       dispatch(spliceFromStore({id}))
       dispatch(setStatus(STATUSES.SUCCESS))
-      console.log(response.data)
+      dispatch(setCheckStatus(STATUSES.SUCCESS))
+      // console.log(response.data.message)
+      dispatch(setMessage(response.data.message))
     }catch(err){
       dispatch(setStatus(STATUSES.ERROR))
       console.log("Error is :",err)
@@ -123,8 +133,10 @@ export function AddProducts(Data){
         }
       })
       dispatch(setStatus(STATUSES.SUCCESS))
+      dispatch(setCheckStatus(STATUSES.SUCCESS))
+      dispatch(setMessage(response.data.message))
       dispatch(pushNewData(response.data.data))
-      // console.log(response.data.data)
+      // console.log(response.data)
     }catch(err){
       console.log("Error is :",err)
       dispatch(setStatus(STATUSES.ERROR))

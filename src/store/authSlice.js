@@ -5,8 +5,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     data: [],
-    status: STATUSES.SUCCESS,
+    status: "",
     token: "",
+    message:"",
+    checkStatus:""
   },
   reducers: {
     setUser(state, action) {
@@ -54,7 +56,7 @@ export function fetchProfile(){
     try{
       const response=await AuthenticatedApi.get("/profile/")
       dispatch(setUser(response.data.data))
-      dispatch(setStatus(STATUSES.SUCCESS))
+      // dispatch(setStatus(STATUSES.SUCCESS))
       // console.log(response.data)
     }catch(err){
       console.log("Error is :",err)

@@ -12,12 +12,14 @@ import tableDataCheck from "./variables/tableDataCheck.json";
 import { useEffect, useState } from "react";
 import api from "http/ApiServices";
 
+
 const Dashboard = () => {
   const [Datas,setDatas]=useState({})
   useEffect(()=>{
     (
       async ()=>{
       const result= await api.getDatas('admin/misc/dataServices')
+    //  console.log(result)
       setDatas(result)
     }
     )()

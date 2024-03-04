@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import {  useNavigate } from 'react-router-dom'
 import { deleteProduct } from 'store/productSlice'
 import { fetchProduct } from 'store/productSlice'
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { STATUSES } from 'globals/misc/Statuses'
+import { setStatus } from 'store/authSlice'
+import { setMessage } from 'store/productSlice'
 
 const Products = () => {
   const navigate=useNavigate()
@@ -10,8 +16,7 @@ const Products = () => {
   useEffect(()=>{
     dispatch(fetchProduct())
   },[])
-  const {data:product}=useSelector((state)=>state.product)//fetch data form product Store
-  // console.log(product)
+  const {data:product,message,checkStatus}=useSelector((state)=>state.product)//fetch data form product Store
   const [selectItem,setSelectItem]=useState("all")
   const [selectDate,setSelectDate]=useState('')
   const [search,setSearch]=useState('')
@@ -26,7 +31,14 @@ const Products = () => {
       dispatch(deleteProduct(id))
     }
   
-  
+  useEffect(()=>{
+    if(checkStatus===STATUSES.SUCCESS)
+    {
+      toast(message,{autoClose: 3000,});
+      dispatch(setStatus(null))
+      dispatch(setMessage(null))
+    }
+  },[checkStatus,message])
   return (
       <div className="container mx-auto mt-0 items-center px-4 sm:px-8">
         <div className="py-8">
@@ -34,49 +46,27 @@ const Products = () => {
             <h2 className="text-2xl font-semibold leading-tight  dark:text-white dark:hover:text-white">Orders</h2>
           </div>
   
-          <div className="my-2 flex flex-col items-center px-4 py-4 rounded-lg bg-gray-100 p-2 sm:flex-row sm:p-4 w-full sm:w-auto">
-            <div className="relative ml-1 mb-2 sm:mb-0 sm:mr-2">
-              <select onChange={(e)=>setSelectItem(e.target.value)} className="block w-full rounded-full border border-gray-400 bg-white py-2 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:outline-none sm:w-48">
-                <option value="all">All</option>
-                <option value="pending">Pending</option>
-                <option value="delivered">Delivered</option>
-                <option value="ontheway">On the way</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="preparation">Preparation</option>
-              </select>
-            </div>
-            <div className="relative block ml-1 mb-2 sm:mb-0 sm:mr-2">
-              <span className="absolute inset-y-0 left-0 flex h-full items-center pl-2">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="fill-current h-4 w-4 text-gray-500"
-                >
-                  <path d="M10 4a6 6 0 100 12 6 6 0 000-12zm-8 6a8 8 0 1114.32 4.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 012 10z"></path>
-                </svg>
-              </span>
-              <input
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search"
-                className="block w-full rounded-full border border-gray-400 bg-white py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              />
-            </div>
-            <div className="relative block ml-1 mb-2 sm:mb-0 sm:mr-2">
-              <span className="absolute inset-y-0 left-0 flex h-full items-center pl-2">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="fill-current h-4 w-4 text-gray-500"
-                >
-                  <path d="M10 4a6 6 0 100 12 6 6 0 000-12zm-8 6a8 8 0 1114.32 4.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 012 10z"></path>
-                </svg>
-              </span>
-              <input
-                onChange={(e) => setSelectDate(e.target.value)}
-                type="date"
-                placeholder="Search"
-                className="block w-full rounded-full border border-gray-400 bg-white py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
-              />
-            </div>
-          </div>
+          <div class="my-2 flex flex-col items-center px-4 py-4 rounded-lg bg-gray-100 p-2 sm:flex-row sm:p-4 w-full sm:w-auto">
+    <div class="relative ml-1 mb-2 sm:mb-0 sm:mr-2">
+        <select onchange="setSelectItem(event.target.value)" class="block w-full rounded-full border border-gray-400 bg-white py-2 px-4 pr-8 leading-tight text-gray-700 focus:border-gray-500 focus:outline-none sm:w-48">
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="delivered">Delivered</option>
+            <option value="ontheway">On the way</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="preparation">Preparation</option>
+        </select>
+    </div>
+    <div class="relative block ml-1 mb-2 sm:mb-0 sm:mr-2">
+        <span class="absolute inset-y-0 left-0 flex h-full items-center pl-2">
+            <svg viewBox="0 0 24 24" class="fill-current h-4 w-4 text-gray-500">
+                <path d="M10 4a6 6 0 100 12 6 6 0 000-12zm-8 6a8 8 0 1114.32 4.906l5.387 5.387a1 1 0 01-1.414 1.414l-5.387-5.387A8 8 0 012 10z"></path>
+            </svg>
+        </span>
+        <input onchange="setSearch(event.target.value)" placeholder="Search" class="block w-full rounded-full border border-gray-400 bg-white py-2 pl-10 pr-4 text-sm text-gray-700 placeholder-gray-400 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" />
+    </div>
+</div>
+
   
           <div className="-mx-4 overflow-x-auto px-4 py-4 rounded-lg bg-gray-100 p-2 sm:flex-row sm:p-4 w-full sm:w-auto">
             <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
@@ -206,6 +196,7 @@ const Products = () => {
             </div>
           </div>
         </div>
+        <ToastContainer />
       </div>
     );
 }
