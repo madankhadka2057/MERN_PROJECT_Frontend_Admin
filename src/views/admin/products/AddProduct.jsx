@@ -19,9 +19,9 @@ const AddProduct = () => {
         }
     }
   return (
-    <div classNameName="text-red-600">
-      <section className="mx-auto mt-20 max-w-2xl rounded-md bg-indigo-600 p-6 shadow-md dark:bg-gray-800">
-        <h1 className="text-xl font-bold capitalize text-white dark:text-white">
+    <div classNameName="">
+      <section className="mx-auto mt-15 max-w-2xl  rounded-md bg-indigo-700 p-6 shadow-md dark:bg-gray-800">
+        <h1 className="text-xl text-center font-bold capitalize text-white dark:text-white">
           Add Product
         </h1>
         <form onSubmit={handleSubmit(handleSubmitData)} encType="multimultipart/form-data" >
