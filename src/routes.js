@@ -13,8 +13,9 @@ import Orders from "views/admin/orders";
 import Users from "views/admin/users";
 import Products from "views/admin/products";
 import SingleOrder from "views/admin/orders/singleOrder";
-import SingleProduct from "views/admin/products/singleProduct";
+// import SingleProduct from "views/admin/products/singleProduct";
 import AddProduct from "views/admin/products/AddProduct";
+import SingleProduct from "views/admin/products/singleProduct";
 // import singleOrder from "./views/admin/orders/singleOrder"
 
 const routes = [
@@ -56,20 +57,18 @@ const routes = [
     component: <Products />,
   },
   {
+    name: "Single Products",
+    layout: "/admin",
+    path: "products/:id",
+    icon: <MdBarChart className="h-6 w-6" />,
+    component: <SingleProduct />,
+  },
+  {
     name: "Add Product",
     layout: "/admin",
     path: "Addproduct",
     icon: <MdBarChart className="h-6 w-6" />,
     component: <AddProduct />,
   },
-  {
-    name: "SingleProduct",
-    layout: "/admin",
-    path: "products/:id",
-    icon: <MdPerson className="h-6 w-6" />,
-    component: <SingleProduct/>,
-    secondary:true,
-  },
-  
 ];
 export default routes;

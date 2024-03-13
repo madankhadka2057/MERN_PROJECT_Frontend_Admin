@@ -2,7 +2,7 @@
 import { socket } from "App";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { changePaymentStatus } from "store/orderSlice";
 import { fetchOrder } from "store/orderSlice";
 import { changeOrderStatus } from "store/orderSlice";
@@ -12,6 +12,7 @@ import { deleteOrder } from "store/orderSlice";
 const SingleOrder = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate=useNavigate()
   useEffect(() => {
     dispatch(fetchOrder())
   }, []);
@@ -83,7 +84,7 @@ const SingleOrder = () => {
             </p>
 
             {filteredOrder &&
-              filteredOrder.items.length > 0 &&
+              filteredOrder.items.length > 0? (
               filteredOrder.items.map((orderItems) => {
                 return (
                   <>
@@ -123,7 +124,9 @@ const SingleOrder = () => {
                     </div>
                   </>
                 );
-              })}
+              })
+              ):(navigate("/admin/orders"))
+            }
           </div>
           <div className="flex w-full flex-col items-stretch justify-center space-y-4 md:flex-row md:space-y-0 md:space-x-6 xl:space-x-8">
             <div className="flex w-full flex-col space-y-6 bg-gray-50 px-4 py-6 dark:bg-gray-800 md:p-6 xl:p-8">

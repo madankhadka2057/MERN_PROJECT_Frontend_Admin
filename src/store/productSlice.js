@@ -34,31 +34,31 @@ const productSlice = createSlice({
     },
     pushNewData(state,action){
       state.data.push(action.payload)
-    }
+    },
+    updatedProductData(state,action){
+      const index=state.data.findIndex(data=>data._id===action.payload.id)
+      if(index!==-1){
+        state.data[index]=action.payload.newData
+      }
+    //   const filteredData=state.data.map((data)=>{
+    //   if(data._id===action.payload.id){
+    //     return {
+    //       ...data,
+    //       data:action.payload.newData
+    //     }
+    //   }
+    // })
+    //   return {
+    //   ...state.data,
+    //     data: action.payload.newData,
+    // }; 
+    },
   },
 });
 
-export const { setProduct, setStatus,spliceFromStore,updateNewData,pushNewData,setMessage,setCheckStatus} = productSlice.actions;
+export const { setProduct, setStatus,spliceFromStore,updateNewData,pushNewData,setMessage,setCheckStatus,updatedProductData} = productSlice.actions;
 export default productSlice.reducer;
 
-// export function loginProduct(data) {
-//   return async function loginProductThunk(dispatch) {
-//     dispatch(setStatus(STATUSES.LOADING));
-//     try {
-//       const response = await AuthenticatedApi.post(
-//         "/product/login",
-//         data
-//       );
-//       // console.log(response.data);
-//       dispatch(setProduct(response.data.data));
-//       dispatch(setStatus(STATUSES.SUCCESS));
-
-//     } catch (error) {
-//       console.log("The error is !!!!!!!!!!!!" + error);
-//       dispatch(setStatus(STATUSES.ERROR));
-//     }
-//   };
-// }
 export function fetchProduct(){
   return async function fetchProductThunk(dispatch){
     dispatch(setStatus(STATUSES.LOADING))
@@ -137,6 +137,29 @@ export function AddProducts(Data){
       dispatch(setMessage(response.data.message))
       dispatch(pushNewData(response.data.data))
       // console.log(response.data)
+    }catch(err){
+      console.log("Error is :",err)
+      dispatch(setStatus(STATUSES.ERROR))
+    }
+  }
+}
+export function updateProduct(id,Data){
+  return async function updateProductThunk(dispatch){
+    dispatch(setStatus(STATUSES.LOADING))
+    try{
+      const response=await AuthenticatedApi.patch(`/products/${id}`,Data,{
+        headers:{
+          "Content-Type":"multipart/form-data"
+        }
+      })
+      dispatch(setStatus(STATUSES.SUCCESS))
+      dispatch(setCheckStatus(STATUSES.SUCCESS))
+      dispatch(setMessage(response.data.message))
+      const newData=response.data.data
+
+      dispatch(updatedProductData({id,newData}))
+      // dispatch(pushNewData(response.data.data))
+      // console.log(newData)
     }catch(err){
       console.log("Error is :",err)
       dispatch(setStatus(STATUSES.ERROR))
