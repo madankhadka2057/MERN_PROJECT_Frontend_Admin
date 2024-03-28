@@ -95,7 +95,7 @@ export function changeOrderStatus(id, orderStatus) {
         orderStatus,
       });
       // console.log(response.status)
-      console.log(response.data.data);
+      // console.log(response.data.data);
       if (response.status === 200) {
         dispatch(setStatus(STATUSES.SUCCESS));
         dispatch(updateOrders({ id, data: response.data.data }));
@@ -116,7 +116,7 @@ export function changePaymentStatus(id, paymentStatus) {
         { paymentStatus }
       );
       // console.log(response.status)
-      console.log(response.data.data);
+      // console.log(response.data.data);
       if (response.status === 200) {
         dispatch(setStatus(STATUSES.SUCCESS));
         dispatch(updatePayment({ id, data: response.data.data }));

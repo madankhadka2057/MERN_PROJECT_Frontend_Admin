@@ -7,7 +7,7 @@ import store from "store/Store";
 import ProtectedRoute from "ProtectedRoute";
 import {io} from 'socket.io-client'
 
-export const socket=io("http://localhost:3001/",{
+export const socket=io("https://foodorder-8jma.onrender.com/",{
   auth:{
     token:localStorage.getItem('token')
   }
